@@ -51,9 +51,11 @@ namespace ConsoleChess
 
         public void printBoard()
         {
-            Console.WriteLine("-----------------");
+            Console.WriteLine("   a b c d e f g h ");
+            Console.WriteLine("  -----------------");
             for (var row = 0; row < 8; row++ )
             {
+                Console.Write(Math.Abs(8-row)+" "); //fancy math to print descending numbers (oooh, aaah)
                 for(var column = 0; column < 8; column++)
                 {
                     Console.Write("|");
@@ -69,7 +71,7 @@ namespace ConsoleChess
                     }
                 }
                 Console.WriteLine("|");
-                Console.WriteLine("-----------------");
+                Console.WriteLine("  -----------------");
             }
         }
     }
