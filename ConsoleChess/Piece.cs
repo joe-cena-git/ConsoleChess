@@ -9,10 +9,13 @@ namespace ConsoleChess
     public class Piece
     {
         public bool isBlack;
-        public char appearance = ' ';
+        public char appearance;
+        public string name;
         public Piece(bool isBlack)
         {
+            this.appearance = ' ';
             this.isBlack = isBlack;
+            this.name = this.GetType().Name;
         }
     }
 }

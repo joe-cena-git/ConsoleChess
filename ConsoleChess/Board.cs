@@ -9,7 +9,6 @@ namespace ConsoleChess
     class Board
     {
         public Piece[,] boardContents { get; set; }
-
         public Board()
         {
             boardContents = new Piece[8, 8];
