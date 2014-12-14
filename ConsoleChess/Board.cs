@@ -8,43 +8,43 @@ namespace ConsoleChess
 {
     class Board
     {
-        public Piece[,] board;
+        public Piece[,] boardContents { get; set; }
 
         public Board()
         {
-            board = new Piece[8,8];
+            boardContents = new Piece[8, 8];
 
             //setup kings
-            board[0, 3] = new King(true);
-            board[7, 4] = new King(false);
+            boardContents[0, 3] = new King(true);
+            boardContents[7, 4] = new King(false);
 
             //setup queens
-            board[0, 4] = new Queen(true);
-            board[7, 3] = new Queen(false);
+            boardContents[0, 4] = new Queen(true);
+            boardContents[7, 3] = new Queen(false);
 
             //setup bishops
-            board[0, 2] = new Bishop(true);
-            board[0, 5] = new Bishop(true);
-            board[7, 2] = new Bishop(false);
-            board[7, 5] = new Bishop(false);
+            boardContents[0, 2] = new Bishop(true);
+            boardContents[0, 5] = new Bishop(true);
+            boardContents[7, 2] = new Bishop(false);
+            boardContents[7, 5] = new Bishop(false);
 
             //setup knights
-            board[0, 1] = new Knight(true);
-            board[0, 6] = new Knight(true);
-            board[7, 1] = new Knight(false);
-            board[7, 6] = new Knight(false);
+            boardContents[0, 1] = new Knight(true);
+            boardContents[0, 6] = new Knight(true);
+            boardContents[7, 1] = new Knight(false);
+            boardContents[7, 6] = new Knight(false);
 
             //setup rooks
-            board[0, 0] = new Rook(true);
-            board[0, 7] = new Rook(true);
-            board[7, 0] = new Rook(false);
-            board[7, 7] = new Rook(false);
+            boardContents[0, 0] = new Rook(true);
+            boardContents[0, 7] = new Rook(true);
+            boardContents[7, 0] = new Rook(false);
+            boardContents[7, 7] = new Rook(false);
 
             //setup pawns
             for (var p = 0; p < 8; p++)
             {
-                board[1, p] = new Pawn(true);
-                board[6, p] = new Pawn(false);
+                boardContents[1, p] = new Pawn(true);
+                boardContents[6, p] = new Pawn(false);
             }
                 
         }
@@ -55,11 +55,11 @@ namespace ConsoleChess
             Console.WriteLine("  -----------------");
             for (var row = 0; row < 8; row++ )
             {
-                Console.Write(Math.Abs(8-row)+" "); //fancy math to print descending numbers (oooh, aaah)
+                Console.Write(Math.Abs(8-row)+" "); //prints numbers descending from 8 to 1
                 for(var column = 0; column < 8; column++)
                 {
                     Console.Write("|");
-                    var contents = board[row, column];
+                    var contents = boardContents[row, column];
 
                     if (contents != null)
                     {
