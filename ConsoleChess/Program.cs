@@ -78,9 +78,11 @@ namespace ConsoleChess
                                     {
                                         legalMove = false;
                                     }
-
-                                    //if it's an enemy piece, we are attempting to capture a piece
-                                    legalMove = selectedPiece.isLegalMove(originCoordinates, destinationCoordinates, true);
+                                    else
+                                    {
+                                        //if it's an enemy piece, we are attempting to capture a piece
+                                        legalMove = selectedPiece.isLegalMove(originCoordinates, destinationCoordinates, true);
+                                    }
                                 }
                                 else
                                 {
