@@ -50,7 +50,7 @@ namespace ConsoleChess
 
         public void printBoard()
         {
-            Console.WriteLine("   a b c d e f g h ");
+            Console.WriteLine("   a b c d e f g h       BLACK");
             Console.WriteLine("  -----------------");
             for (var row = 0; row < 8; row++ )
             {
@@ -69,9 +69,11 @@ namespace ConsoleChess
                         Console.Write(" ");
                     }
                 }
-                Console.WriteLine("|");
+                Console.Write("| ");
+                Console.Write(Math.Abs(8 - row) + " \n"); //prints numbers descending from 8 to 1
                 Console.WriteLine("  -----------------");
             }
+            Console.WriteLine("   a b c d e f g h       WHITE");
         }
     }
 }

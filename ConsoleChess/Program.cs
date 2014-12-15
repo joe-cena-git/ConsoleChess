@@ -13,15 +13,25 @@ namespace ConsoleChess
             bool checkmate = false;
             string feedback = "";
             Board board = new Board();
-
+            bool isBlacksTurn = false;
+            var legalMove = false;
             while(!checkmate)
             {
                 Console.Clear();
                 board.printBoard();
+                if (isBlacksTurn)
+                {
+                    Console.WriteLine("\nBLACKS TURN ");
+                }
+                else
+                {
+                    Console.WriteLine("\nWHITES TURN");
+                }
+                Console.WriteLine(feedback);
 
                 Console.Write("Select a piece to move.\n");
                 Tuple<int, int> originCoordinates = getBoardCoordinateByUserInput();
-                Piece selectedPiece = board.boardContents[originCoordinates.Item1, originCoordinates.Item2];                
+                Piece selectedPiece = board.boardContents[originCoordinates.Item1, originCoordinates.Item2];
 
                 if (selectedPiece == null)
                 {
@@ -29,20 +39,56 @@ namespace ConsoleChess
                 }
                 else //we found a piece at those coordinates
                 {
-                    Console.WriteLine("\n\nSelected a " + selectedPiece.name + ".");
-
-                    Console.Write("Select a space to move it to.\n");
-                    Tuple<int, int> destinationCoordinates = getBoardCoordinateByUserInput();
-                    
-                    if(destinationCoordinates == null)
+                    if (selectedPiece.isBlack != isBlacksTurn) //elegant way to check turn and piece ownership!
                     {
-                        feedback = "Those coordinates were invalid.";
+                        feedback = "That piece does not belong to you.";
                     }
-                    else //we can move the piece now
+                    else
                     {
-                        board.boardContents[destinationCoordinates.Item1, destinationCoordinates.Item2] =   //set contents in destination spot
-                            board.boardContents[originCoordinates.Item1, originCoordinates.Item2];          //equal to contents in origin spot
-                        board.boardContents[originCoordinates.Item1, originCoordinates.Item2] = null;       //then delete contents in origin spot
+                        Console.WriteLine("\n\nSelected a " + selectedPiece.name + ".");
+
+                        Console.Write("Select a space to move it to.\n");
+                        Tuple<int, int> destinationCoordinates = getBoardCoordinateByUserInput();
+
+                        if (destinationCoordinates == null)
+                        {
+                            feedback = "Those coordinates were invalid.";
+                        }
+                        else //both coordinates are valid
+                        {
+                            //find out what is in the destination spot
+                            var targetPiece = board.boardContents[destinationCoordinates.Item1, destinationCoordinates.Item2];
+                            
+                            if (targetPiece != null)
+                            {
+                                //if it's a friendly piece, we can't move there
+                                if(targetPiece.isBlack == isBlacksTurn) //will return true if we are trying to capture our own piece
+                                {
+                                    legalMove = false;
+                                }
+
+                                //if it's an enemy piece, we are attempting to capture a piece
+                                legalMove = selectedPiece.isLegalMove(originCoordinates, destinationCoordinates, true);
+                            }
+                            else
+                            {
+                                //if there is no piece, we are not capturing
+                                legalMove = selectedPiece.isLegalMove(originCoordinates, destinationCoordinates, false);
+                            }
+
+                            if(legalMove == false)
+                            {
+                                feedback = "That is not a legal move.";
+                            }
+                            else
+                            {
+                                board.boardContents[destinationCoordinates.Item1, destinationCoordinates.Item2] =   //set contents in destination spot
+                                board.boardContents[originCoordinates.Item1, originCoordinates.Item2];          //equal to contents in origin spot
+                                board.boardContents[originCoordinates.Item1, originCoordinates.Item2] = null;       //then delete contents in origin spot
+                                isBlacksTurn = !isBlacksTurn; //it is the other side's turn now, since we moved
+                                feedback = ""; //reset the feedback so we don't show any outdated error messages
+                            }
+                        }
                     }
                 }
             }
@@ -69,6 +115,11 @@ namespace ConsoleChess
 
             Console.Write("Column: ");
             char columnInput = Console.ReadKey().KeyChar;
+
+            if(columnInput == 'v')
+            {
+                
+            }
 
             Console.Write("\n");
 
