@@ -96,7 +96,7 @@ namespace ConsoleChess
                                 }
                                 else
                                 {
-                                    if((selectedPiece.name == "Queen" || selectedPiece.name == "Bishop") && !board.hasLineOfSight(originCoordinates, destinationCoordinates))
+                                    if((selectedPiece.name == "Queen" || selectedPiece.name == "Bishop" || selectedPiece.name == "Rook") && !board.hasLineOfSight(originCoordinates, destinationCoordinates))
                                     {
                                             feedback = "You do not have line-of-sight to that piece.";
                                     }
