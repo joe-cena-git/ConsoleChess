@@ -12,5 +12,15 @@ namespace ConsoleChess
         {
             this.appearance = '$';
         }
+
+        public override bool isLegalMove(Tuple<int, int> origin, Tuple<int, int> destination, bool capturing)
+        {
+            if (Math.Abs(destination.Item1 - origin.Item1) <= 1 && Math.Abs(destination.Item2 - origin.Item2) <= 1)
+            {
+                return true;
+            }
+
+            return false;
+        }
     }
 }
