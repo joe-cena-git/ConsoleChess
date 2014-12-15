@@ -10,7 +10,7 @@ namespace ConsoleChess
     {
         public Bishop(bool isBlack) : base(isBlack)
         {
-            this.appearance = 'b';
+            this.appearance = 'A';
         }
     }
 }
