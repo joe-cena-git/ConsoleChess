@@ -50,30 +50,86 @@ namespace ConsoleChess
 
         public void printBoard()
         {
-            Console.WriteLine("   a b c d e f g h       BLACK");
-            Console.WriteLine("  -----------------");
+            Console.WriteLine();
+            Console.WriteLine("     A    B    C    D    E    F    G    H");
+            Console.WriteLine();
             for (var row = 0; row < 8; row++ )
             {
-                Console.Write(Math.Abs(8-row)+" "); //prints numbers descending from 8 to 1
-                for(var column = 0; column < 8; column++)
+                
+                for (var boxHeight = 0; boxHeight < 3; boxHeight++ )
                 {
-                    Console.Write("|");
-                    var contents = boardContents[row, column];
-
-                    if (contents != null)
+                    Console.ResetColor();
+                    if(boxHeight == 1)
                     {
-                        Console.Write(contents.appearance);
+                        
+                        Console.Write(" "+Math.Abs(8-row)+" "); //prints numbers descending from 8 to 1
                     }
                     else
                     {
-                        Console.Write(" ");
+                        Console.Write("   ");
                     }
+                    for (var column = 0; column < 8; column++)
+                    {
+                        if (row % 2 == 0)
+                        {
+                            if (column % 2 == 0)
+                            {
+                                Console.BackgroundColor = ConsoleColor.Gray;
+                            }
+                            else
+                            {
+                                Console.BackgroundColor = ConsoleColor.DarkGray;
+                            }
+                        }
+                        else
+                        {
+                            if (column % 2 != 0)
+                            {
+                                Console.BackgroundColor = ConsoleColor.Gray;
+                            }
+                            else
+                            {
+                                Console.BackgroundColor = ConsoleColor.DarkGray;
+                            }
+                        }
+
+                        Console.Write("  ");
+                        var contents = boardContents[row, column];
+
+                        if (contents != null && boxHeight == 1)
+                        {
+                            if (contents.isBlack)
+                            {
+                                Console.ForegroundColor = ConsoleColor.Black;
+                            }
+                            else
+                            {
+                                Console.ForegroundColor = ConsoleColor.White;
+                            }
+                            Console.Write(contents.appearance);
+                        }
+                        else
+                        {
+                            Console.Write(" ");
+                        }
+                        Console.Write("  ");
+                    }
+                    Console.ResetColor();
+                    if (boxHeight == 1)
+                    {
+
+                        Console.Write(" "+Math.Abs(8 - row)); //prints numbers descending from 8 to 1
+                    }
+                    else
+                    {
+                        Console.Write("  ");
+                    }
+                    Console.WriteLine();
                 }
-                Console.Write("| ");
-                Console.Write(Math.Abs(8 - row) + " \n"); //prints numbers descending from 8 to 1
-                Console.WriteLine("  -----------------");
             }
-            Console.WriteLine("   a b c d e f g h       WHITE");
+            Console.WriteLine();
+            Console.WriteLine("     A    B    C    D    E    F    G    H");
+            Console.WriteLine();
         }
     }
 }
