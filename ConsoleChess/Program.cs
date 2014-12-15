@@ -96,11 +96,18 @@ namespace ConsoleChess
                                 }
                                 else
                                 {
-                                    board.boardContents[destinationCoordinates.Item1, destinationCoordinates.Item2] =   //set contents in destination spot
-                                    board.boardContents[originCoordinates.Item1, originCoordinates.Item2];          //equal to contents in origin spot
-                                    board.boardContents[originCoordinates.Item1, originCoordinates.Item2] = null;       //then delete contents in origin spot
-                                    isBlacksTurn = !isBlacksTurn; //it is the other side's turn now, since we moved
-                                    feedback = ""; //reset the feedback so we don't show any outdated error messages
+                                    if((selectedPiece.name == "Queen" || selectedPiece.name == "Bishop") && !board.hasLineOfSight(originCoordinates, destinationCoordinates))
+                                    {
+                                            feedback = "You do not have line-of-sight to that piece.";
+                                    }
+                                    else
+                                    {
+                                        board.boardContents[destinationCoordinates.Item1, destinationCoordinates.Item2] =   //set contents in destination spot
+                                        board.boardContents[originCoordinates.Item1, originCoordinates.Item2];          //equal to contents in origin spot
+                                        board.boardContents[originCoordinates.Item1, originCoordinates.Item2] = null;       //then delete contents in origin spot
+                                        isBlacksTurn = !isBlacksTurn; //it is the other side's turn now, since we moved
+                                        feedback = ""; //reset the feedback so we don't show any outdated error messages
+                                    }
                                 }
                             }
                         }
