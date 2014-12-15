@@ -15,6 +15,11 @@ namespace ConsoleChess
             Board board = new Board();
             bool isBlacksTurn = false;
             var legalMove = false;
+
+            //set presentation window size
+            Console.SetWindowPosition(0, 0);
+            Console.SetWindowSize(46, 50);
+
             while(!checkmate)
             {
                 Console.Clear();
@@ -30,63 +35,71 @@ namespace ConsoleChess
                 Console.WriteLine(feedback);
 
                 Console.Write("Select a piece to move.\n");
+                
                 Tuple<int, int> originCoordinates = getBoardCoordinateByUserInput();
-                Piece selectedPiece = board.boardContents[originCoordinates.Item1, originCoordinates.Item2];
 
-                if (selectedPiece == null)
+                if(originCoordinates == null)
                 {
-                    feedback = "There is no piece there!";
+                    feedback = "Invalid input. Try again.";
                 }
-                else //we found a piece at those coordinates
+                else
                 {
-                    if (selectedPiece.isBlack != isBlacksTurn) //elegant way to check turn and piece ownership!
+                    Piece selectedPiece = board.boardContents[originCoordinates.Item1, originCoordinates.Item2];
+                    if (selectedPiece == null)
                     {
-                        feedback = "That piece does not belong to you.";
+                        feedback = "There is no piece there!";
                     }
-                    else
+                    else //we found a piece at those coordinates
                     {
-                        Console.WriteLine("\n\nSelected a " + selectedPiece.name + ".");
-
-                        Console.Write("Select a space to move it to.\n");
-                        Tuple<int, int> destinationCoordinates = getBoardCoordinateByUserInput();
-
-                        if (destinationCoordinates == null)
+                        if (selectedPiece.isBlack != isBlacksTurn) //elegant way to check turn and piece ownership!
                         {
-                            feedback = "Those coordinates were invalid.";
+                            feedback = "That piece does not belong to you.";
                         }
-                        else //both coordinates are valid
+                        else
                         {
-                            //find out what is in the destination spot
-                            var targetPiece = board.boardContents[destinationCoordinates.Item1, destinationCoordinates.Item2];
-                            
-                            if (targetPiece != null)
+                            Console.WriteLine("\n\nSelected a " + selectedPiece.name + ".");
+
+                            Console.Write("Select a space to move it to.\n");
+                            Tuple<int, int> destinationCoordinates = getBoardCoordinateByUserInput();
+
+                            if (destinationCoordinates == null)
                             {
-                                //if it's a friendly piece, we can't move there
-                                if(targetPiece.isBlack == isBlacksTurn) //will return true if we are trying to capture our own piece
+                                feedback = "Those coordinates were invalid.";
+                            }
+                            else //both coordinates are valid
+                            {
+                                //find out what is in the destination spot
+                                var targetPiece = board.boardContents[destinationCoordinates.Item1, destinationCoordinates.Item2];
+
+                                if (targetPiece != null)
                                 {
-                                    legalMove = false;
+                                    //if it's a friendly piece, we can't move there
+                                    if (targetPiece.isBlack == isBlacksTurn) //will return true if we are trying to capture our own piece
+                                    {
+                                        legalMove = false;
+                                    }
+
+                                    //if it's an enemy piece, we are attempting to capture a piece
+                                    legalMove = selectedPiece.isLegalMove(originCoordinates, destinationCoordinates, true);
+                                }
+                                else
+                                {
+                                    //if there is no piece, we are not capturing
+                                    legalMove = selectedPiece.isLegalMove(originCoordinates, destinationCoordinates, false);
                                 }
 
-                                //if it's an enemy piece, we are attempting to capture a piece
-                                legalMove = selectedPiece.isLegalMove(originCoordinates, destinationCoordinates, true);
-                            }
-                            else
-                            {
-                                //if there is no piece, we are not capturing
-                                legalMove = selectedPiece.isLegalMove(originCoordinates, destinationCoordinates, false);
-                            }
-
-                            if(legalMove == false)
-                            {
-                                feedback = "That is not a legal move.";
-                            }
-                            else
-                            {
-                                board.boardContents[destinationCoordinates.Item1, destinationCoordinates.Item2] =   //set contents in destination spot
-                                board.boardContents[originCoordinates.Item1, originCoordinates.Item2];          //equal to contents in origin spot
-                                board.boardContents[originCoordinates.Item1, originCoordinates.Item2] = null;       //then delete contents in origin spot
-                                isBlacksTurn = !isBlacksTurn; //it is the other side's turn now, since we moved
-                                feedback = ""; //reset the feedback so we don't show any outdated error messages
+                                if (legalMove == false)
+                                {
+                                    feedback = "That is not a legal move.";
+                                }
+                                else
+                                {
+                                    board.boardContents[destinationCoordinates.Item1, destinationCoordinates.Item2] =   //set contents in destination spot
+                                    board.boardContents[originCoordinates.Item1, originCoordinates.Item2];          //equal to contents in origin spot
+                                    board.boardContents[originCoordinates.Item1, originCoordinates.Item2] = null;       //then delete contents in origin spot
+                                    isBlacksTurn = !isBlacksTurn; //it is the other side's turn now, since we moved
+                                    feedback = ""; //reset the feedback so we don't show any outdated error messages
+                                }
                             }
                         }
                     }
@@ -116,26 +129,27 @@ namespace ConsoleChess
             Console.Write("Column: ");
             char columnInput = Console.ReadKey().KeyChar;
 
-            if(columnInput == 'v')
-            {
-                
-            }
-
             Console.Write("\n");
 
             Console.Write("Row: ");
-            int rowInput;
-            bool isInteger = int.TryParse(Console.ReadKey().KeyChar.ToString(), out rowInput); //stores the value in rowInput if it is an integer
-
-            if (!(columnDisplayNames.ContainsKey(columnInput)) || !(isInteger) || rowInput < 1 || rowInput > 8)
+            try
             {
-                return null; //invalid entry
+                int rowInput;
+                bool isInteger = int.TryParse(Console.ReadKey().KeyChar.ToString(), out rowInput); //stores the value in rowInput if it is an integer
+                if (!(columnDisplayNames.ContainsKey(columnInput)) || !(isInteger) || rowInput < 1 || rowInput > 8)
+                {
+                    return null; //invalid entry
+                }
+                else
+                {
+                    int column = columnDisplayNames[columnInput]; //convert letter to column index
+                    int row = 8 - (int)rowInput; //convert number to row index
+                    return new Tuple<int, int>(row, column);
+                }
             }
-            else
+            catch (Exception e)
             {
-                int column = columnDisplayNames[columnInput]; //convert letter to column index
-                int row = 8 - (int)rowInput; //convert number to row index
-                return new Tuple<int, int>(row, column);
+                return null;
             }
         }
     }
